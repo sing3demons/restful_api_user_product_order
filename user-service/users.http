@@ -1,0 +1,23 @@
+@uri=http://localhost:8080
+
+POST {{uri}}/users HTTP/1.1
+Content-Type: application/json
+
+{
+    "first_name": "John",
+    "last_name": "Doe",
+    "username": "johndoe",
+    "email": "johndoe@example.com"
+}
+
+### Get User By ID
+GET {{uri}}/users/0197b7a6-a986-7537-b37c-435d0c179d5f HTTP/1.1
+Content-Type: application/json
+
+### 
+GET {{uri}}/users HTTP/1.1
+Content-Type: application/json
+
+### Delete User By ID
+DELETE {{uri}}/0197b96c-5cca-7956-980a-a57390f112e7 HTTP/1.1
+Content-Type: application/json
