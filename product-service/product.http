@@ -17,3 +17,6 @@ Content-Type: application/json
 ###
 DELETE http://localhost:8082/products/2db4110e-29f5-4c35-a552-ce2bf82e04db HTTP/1.1
 Content-Type: application/json
+
+###
+GET http://localhost:8082/healthz HTTP/1.1

@@ -30,7 +30,7 @@
         }
     },
     "server": {
-        "app_port": "8080",
+        "app_port": "8082",
         "app_host": "localhost",
         "https": false,
         "cert": "./cert.pem",

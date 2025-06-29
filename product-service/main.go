@@ -3,18 +3,24 @@ package main
 import (
 	"database/sql"
 	"fmt"
+	"os"
 
+	_ "github.com/lib/pq" // PostgreSQL driver
 	config "github.com/sing3demons/go-product-service/configs"
 	"github.com/sing3demons/go-product-service/pkg/kp"
 	"github.com/sing3demons/go-product-service/pkg/logger"
 	"github.com/sing3demons/go-product-service/product"
-	_ "github.com/lib/pq" // PostgreSQL driver
 )
 
 func NewDB() (*sql.DB, error) {
+	host := os.Getenv("DB_HOST")
+	if host == "" {
+		host = "localhost"
+	}
 	databaseSource := fmt.Sprintf("host=%s port=%d user=%s "+
-		"password=%s dbname=%s sslmode=disable", "localhost", 5432, "root", "password", "product_master")
+		"password=%s dbname=%s sslmode=disable", host, 5432, "root", "password", "product_master")
 
+	fmt.Println("Connecting to database with source:", databaseSource)
 	db, err := sql.Open("postgres", databaseSource)
 	if err != nil {
 		return nil, err
@@ -28,7 +34,11 @@ func NewDB() (*sql.DB, error) {
 
 func main() {
 	conf := config.NewConfig()
-	conf.LoadEnv("configs")
+	if os.Getenv("ENV") == "docker" {
+		conf.LoadEnv("configs/.docker.env")
+	} else {
+		conf.LoadEnv("configs")
+	}
 
 	logApp := logger.NewLogger(conf.Log.App)
 	defer logApp.Sync()

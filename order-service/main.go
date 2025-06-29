@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"fmt"
+	"os"
 	"time"
 
 	config "github.com/sing3demons/go-order-service/configs"
@@ -14,8 +15,10 @@ import (
 )
 
 func ConnectMongo() *mongo.Database {
-
-	uri := "mongodb://localhost:27017" // Replace with your MongoDB URI
+	uri := os.Getenv("MONGO_URI")
+	if uri == "" {
+		uri = "mongodb://localhost:27017" // Replace with your MongoDB URI
+	}
 	mongoClient, err := mongo.Connect(context.Background(), options.Client().ApplyURI(uri))
 	if err != nil {
 		panic(err)
@@ -32,7 +35,11 @@ func ConnectMongo() *mongo.Database {
 
 func main() {
 	conf := config.NewConfig()
-	conf.LoadEnv("configs")
+	if os.Getenv("ENV") == "docker" {
+		conf.LoadEnv("configs/.docker.env")
+	} else {
+		conf.LoadEnv("configs")
+	}
 
 	logApp := logger.NewLogger(conf.Log.App)
 	defer logApp.Sync()

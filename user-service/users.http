@@ -11,7 +11,7 @@ Content-Type: application/json
 }
 
 ### Get User By ID
-GET {{uri}}/users/0197b7a6-a986-7537-b37c-435d0c179d5f HTTP/1.1
+GET {{uri}}/users/0197bbe2-768d-70c6-b968-f046ce6c605d HTTP/1.1
 Content-Type: application/json
 
 ### 
@@ -21,3 +21,6 @@ Content-Type: application/json
 ### Delete User By ID
 DELETE {{uri}}/0197b96c-5cca-7956-980a-a57390f112e7 HTTP/1.1
 Content-Type: application/json
+
+###
+GET http://localhost:8080/healthz HTTP/1.1

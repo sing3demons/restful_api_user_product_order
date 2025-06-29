@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"fmt"
+	"os"
 
 	config "github.com/sing3demons/go-user-service/configs"
 	"github.com/sing3demons/go-user-service/pkg/kp"
@@ -13,8 +14,12 @@ import (
 )
 
 func ConnectMongo() *mongo.Database {
+	uri := os.Getenv("MONGO_URI")
+	if uri == "" {
+		uri = "mongodb://localhost:27017" // Default URI if not set
+	}
+	fmt.Println("Connecting to MongoDB at:", uri)
 
-	uri := "mongodb://localhost:27017" // Replace with your MongoDB URI
 	mongoClient, err := mongo.Connect(context.Background(), options.Client().ApplyURI(uri))
 	if err != nil {
 		panic(err)
@@ -31,7 +36,11 @@ func ConnectMongo() *mongo.Database {
 
 func main() {
 	conf := config.NewConfig()
-	conf.LoadEnv("configs")
+	if os.Getenv("ENV") == "docker" {
+		conf.LoadEnv("configs/.docker.env")
+	} else {
+		conf.LoadEnv("configs")
+	}
 
 	logApp := logger.NewLogger(conf.Log.App)
 	defer logApp.Sync()
@@ -50,7 +59,6 @@ func main() {
 	app.Get("/healthz", func(ctx *kp.Context) error {
 		return ctx.JSON(200, "OK")
 	})
-
 
 	user.RegisterRoutes(app, mongoDB.Collection("users"))
 	app.Start()

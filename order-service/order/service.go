@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"os"
 	"time"
 
 	"github.com/sing3demons/go-order-service/pkg/kp"
@@ -114,8 +115,14 @@ func getUserByID(ctx *kp.Context, userID string) (UserModel, error) {
 		Description: "success",
 	}
 
+	// userServiceURL := ctx.GetConfig().GetOrDefault("USER_SERVICE_URL", "http://localhost:8080")
+	userServiceURL := os.Getenv("USER_SERVICE_URL")
+	if userServiceURL == "" {
+		userServiceURL = "http://localhost:8080" // Default URL if not set
+	}
+
 	httpRequest := HttpRequest{
-		URL:      "http://localhost:8080/users/" + userID,
+		URL:      userServiceURL + "/users/" + userID,
 		Headers:  map[string]string{contentTypeHeader: "application/json"},
 		Params:   map[string]string{"user_id": userID},
 		Protocol: "http",
@@ -156,7 +163,7 @@ func getUserByID(ctx *kp.Context, userID string) (UserModel, error) {
 	if resp.StatusCode != http.StatusOK {
 		summary.Code = fmt.Sprintf("%d", resp.StatusCode)
 		summary.Description = resp.Status
-		ctx.Log().SetSummary(summary).Error(logger.NewHTTPResponse("get user by ID failed", ""), map[string]string{
+		ctx.Log().SetSummary(summary).Error(logger.NewHTTPResponse("get user by id failed", ""), map[string]string{
 			"error": fmt.Sprintf("failed to get user by ID: %s", resp.Status),
 		})
 		return UserModel{}, fmt.Errorf("failed to get user by ID: %s", resp.Status)
@@ -199,8 +206,13 @@ func getProductByID(ctx *kp.Context, productID string) (ProductModel, error) {
 		Description: "success",
 	}
 
+	// productServiceURL := ctx.GetConfig().GetOrDefault("PRODUCT_SERVICE_URL", "http://localhost:8082")
+	productServiceURL := os.Getenv("PRODUCT_SERVICE_URL")
+	if productServiceURL == "" {
+		productServiceURL = "http://localhost:8082" // Default URL if not set
+	}
 	httpRequest := HttpRequest{
-		URL:      "http://localhost:8082/products/" + productID,
+		URL:      productServiceURL + "/products/" + productID,
 		Headers:  map[string]string{contentTypeHeader: "application/json"},
 		Params:   map[string]string{"product_id": productID},
 		Protocol: "http",

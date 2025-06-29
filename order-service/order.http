@@ -4,11 +4,11 @@ POST {{uti}}/orders HTTP/1.1
 Content-Type: application/json
 
 {
-    "customer_id": "0197b9c6-a3ca-7ea2-bf4e-a6c9ec2af1d8",
+    "customer_id": "0197bbe2-768d-70c6-b968-f046ce6c605d",
     "status": "pending",
     "items": [
         {
-            "id": "07952a46-3110-406a-90d8-8723414068ed",
+            "id": "28bd9405-9d5b-4a21-9a5a-ed1103d67189",
             "name": "p1",
             "quantity": 1,
             "price": 20.0
@@ -16,3 +16,6 @@ Content-Type: application/json
     ],
     "total_price": 40.0
 }
+
+###
+GET http://localhost:8083/healthz HTTP/1.1
