@@ -36,7 +36,9 @@ type Request interface {
 	TransactionId() string
 	SessionId() string
 	RequestId() string
+	Body() (string, error)
 }
+
 type LogService struct {
 	appLog         logger.LoggerService
 	detailLog      logger.LoggerService
@@ -62,11 +64,14 @@ func newContext(w http.ResponseWriter, r Request, k kafka.Client, log LogService
 		Client:         k,
 	}
 
+	isHTTP := true
+
 	broker := "none"
 	source := "api"
 	if w == nil {
 		broker = r.HostName()
 		source = "event-source"
+		isHTTP = false
 	}
 
 	meta := logger.Metadata{
@@ -92,6 +97,31 @@ func newContext(w http.ResponseWriter, r Request, k kafka.Client, log LogService
 		RequestId:        ctx.RequestId(),
 	}
 	kpLog.Init(customLog)
+	if !isHTTP {
+		topic := r.Param("topic")
+		summary := logger.LogEventTag{
+			Node:        "consumer",
+			Command:     topic,
+			Code:        "200",
+			Description: "",
+		}
+		body, err := ctx.Body()
+		if err != nil {
+			summary.Code = "500"
+			summary.Description = err.Error()
+			kpLog.SetSummary(summary).Error(logger.NewConsuming(topic, "kafka"+"_consumer"), map[string]any{
+				"topic":  topic,
+				"broker": broker,
+				"error":  err.Error(),
+			})
+		} else {
+			kpLog.SetSummary(summary).Info(logger.NewConsuming(topic, "kafka"+"_consumer"), map[string]any{
+				"topic":  topic,
+				"broker": broker,
+				"body":   body,
+			})
+		}
+	}
 
 	// kpLog.Init(commonlog.LogDto{
 	// 	Channel:          "none",

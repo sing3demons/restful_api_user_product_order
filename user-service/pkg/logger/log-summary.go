@@ -86,7 +86,7 @@ func (s *summaryLogService) Flush(data Stack) {
 		events := []EventSummary{}
 		for i := range sequences {
 			events = append(events, EventSummary{
-				Event:  sequences[i].Node + " . " + sequences[i].Command,
+				Event:  sequences[i].Node + "." + sequences[i].Command,
 				Result: sequences[i].Result,
 			})
 		}

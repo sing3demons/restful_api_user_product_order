@@ -136,6 +136,19 @@ func (r *Request) PathParam(key string) string {
 	return r.pathParams[key]
 }
 
+func (r *Request) Body() (string, error) {
+	// Read the request body
+	bodyBytes, err := io.ReadAll(r.req.Body)
+	if err != nil {
+		return "", fmt.Errorf("failed to read request body: %w", err)
+	}
+
+	// Restore the request body so it can be read again later
+	r.req.Body = io.NopCloser(bytes.NewBuffer(bodyBytes))
+
+	return string(bodyBytes), nil
+}
+
 // Bind parses the request body and binds it to the provided interface.
 func (r *Request) Bind(i any) error {
 	v := r.req.Header.Get("Content-Type")

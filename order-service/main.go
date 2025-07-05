@@ -68,6 +68,7 @@ func main() {
 		// 		"total_price": o.TotalPrice,
 		// 	},
 		// }
+
 		var data map[string]any
 		if err := ctx.Bind(&data); err != nil {
 			return ctx.JSON(400, "Invalid request")
