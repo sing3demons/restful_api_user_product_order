@@ -16,8 +16,10 @@ services:
   logstash:
     image: docker.elastic.co/logstash/logstash:7.17.2
     container_name: logstash
-    ports:
-      - '5044:5044'
+    expose:
+      - '5044'
+    # ports:
+    #   - '5044:5044'
     volumes:
       - ./logstash.conf:/usr/share/logstash/pipeline/logstash.conf:ro
     environment:
@@ -30,9 +32,12 @@ services:
   elasticsearch:
     image: docker.elastic.co/elasticsearch/elasticsearch:7.17.2
     container_name: elasticsearch
-    ports:
-      - '9200:9200'
-      - '9300:9300'
+    expose:
+      - '9200'
+      - '9300'
+    # ports:
+    #   - '9200:9200'
+    #   - '9300:9300'
     environment:
       - discovery.type=single-node
       - xpack.security.enabled=false

@@ -88,6 +88,8 @@ func newContext(w http.ResponseWriter, r Request, k kafka.Client, log LogService
 		ComponentVersion: conf.App.Version,
 		Instance:         hostName,
 		Metadata:         meta,
+		SessionId:        ctx.SessionId(),
+		RequestId:        ctx.RequestId(),
 	}
 	kpLog.Init(customLog)
 

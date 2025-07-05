@@ -6,6 +6,7 @@ import (
 	"errors"
 	"reflect"
 	"strconv"
+	"strings"
 
 	"github.com/google/uuid"
 	"github.com/segmentio/kafka-go"
@@ -66,10 +67,10 @@ func NewMessage(ctx context.Context, msg kafka.Message) *Message {
 	if len(msg.Headers) != 0 {
 		for _, header := range msg.Headers {
 			switch header.Key {
-			case "X-Transaction-ID":
+			case strings.ToLower("X-Transaction-ID"):
 				data.Header.Transaction = string(header.Value)
 				extractHeaders = false
-			case "X-Session-ID":
+			case strings.ToLower("X-Session-ID"):
 				data.Header.Session = string(header.Value)
 				extractHeaders = false
 			}
@@ -125,19 +126,19 @@ func (m *Message) URL() string {
 	return m.Topic // Using topic as URL for Kafka messages
 }
 func (m *Message) TransactionId() string {
-	return "" // Kafka messages do not have a transaction ID by default
+	return m.TransactionID // Kafka messages can have a transaction ID
 }
 func (m *Message) SessionId() string {
-	return "" // Kafka messages do not have a session ID by default
+	return m.SessionID // Kafka messages can have a session ID
 }
 func (m *Message) RequestId() string {
-	return "" // Kafka messages do not have a request ID by default
+	return m.RequestID // Kafka messages can have a request ID
 }
 func (m *Message) Referer() string {
 	return "" // Kafka messages do not have a referer by default
 }
 func (m *Message) HostName() string {
-	return "" // Kafka messages do not have a hostname by default
+	return "" // Kafka messages do not have a hostname like HTTP requests
 }
 func (m *Message) Headers() map[string]any {
 	return nil // Kafka messages do not have headers like HTTP requests
