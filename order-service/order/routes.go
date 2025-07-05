@@ -1,7 +1,7 @@
 package order
 
 import (
-	"github.com/sing3demons/go-order-service/pkg/kp"
+	"github.com/sing3demons/go-common-kp/kp/pkg/kp"
 	"go.mongodb.org/mongo-driver/mongo"
 )
 

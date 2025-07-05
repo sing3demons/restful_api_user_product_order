@@ -1,8 +1,6 @@
 package product
 
-import (
-	"github.com/sing3demons/go-product-service/pkg/kp"
-)
+import "github.com/sing3demons/go-common-kp/kp/pkg/kp"
 
 type Service interface {
 	GetProductByID(ctx *kp.Context, id string) (*ProductModel, error)

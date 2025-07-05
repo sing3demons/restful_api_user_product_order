@@ -1,8 +1,8 @@
 package product
 
 import (
-	"github.com/sing3demons/go-product-service/pkg/kp"
-	"github.com/sing3demons/go-product-service/pkg/logger"
+	"github.com/sing3demons/go-common-kp/kp/pkg/kp"
+	"github.com/sing3demons/go-common-kp/kp/pkg/logger"
 )
 
 type Handler struct {

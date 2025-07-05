@@ -6,10 +6,10 @@ import (
 	"os"
 	"time"
 
-	config "github.com/sing3demons/go-order-service/configs"
+	config "github.com/sing3demons/go-common-kp/kp/configs"
+	"github.com/sing3demons/go-common-kp/kp/pkg/kp"
+	"github.com/sing3demons/go-common-kp/kp/pkg/logger"
 	"github.com/sing3demons/go-order-service/order"
-	"github.com/sing3demons/go-order-service/pkg/kp"
-	"github.com/sing3demons/go-order-service/pkg/logger"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 )

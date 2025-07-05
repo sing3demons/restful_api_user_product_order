@@ -4,7 +4,7 @@ import (
 	"database/sql"
 	"fmt"
 
-	"github.com/sing3demons/go-product-service/pkg/kp"
+	"github.com/sing3demons/go-common-kp/kp/pkg/kp"
 )
 
 const createTable = `

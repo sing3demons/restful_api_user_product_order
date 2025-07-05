@@ -6,9 +6,9 @@ import (
 	"os"
 
 	_ "github.com/lib/pq" // PostgreSQL driver
-	config "github.com/sing3demons/go-product-service/configs"
-	"github.com/sing3demons/go-product-service/pkg/kp"
-	"github.com/sing3demons/go-product-service/pkg/logger"
+	config "github.com/sing3demons/go-common-kp/kp/configs"
+	"github.com/sing3demons/go-common-kp/kp/pkg/kp"
+	"github.com/sing3demons/go-common-kp/kp/pkg/logger"
 	"github.com/sing3demons/go-product-service/product"
 )
 

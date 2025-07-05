@@ -3,8 +3,8 @@ package order
 import (
 	"errors"
 
-	"github.com/sing3demons/go-order-service/pkg/kp"
-	"github.com/sing3demons/go-order-service/pkg/logger"
+	"github.com/sing3demons/go-common-kp/kp/pkg/kp"
+	"github.com/sing3demons/go-common-kp/kp/pkg/logger"
 )
 
 type Handler struct {
