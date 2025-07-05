@@ -27,6 +27,7 @@ RUN apk update && apk upgrade && \
     ln -snf /usr/share/zoneinfo/"$TZ" /etc/localtime && echo "$TZ" > /etc/timezone
 
 COPY --from=builder /go/src/main /
+COPY --from=builder /go/src/configs /configs
 EXPOSE 8082
 
 CMD ["./main"]

@@ -102,7 +102,7 @@ func (c *customLoggerService) toStr(action LoggerAction, data any, options ...Ma
 	c.logDto.SubAction = action.SubAction
 	c.logDto.Message = toJSON(cloned)
 	c.logDto.Timestamp = ptrTime(time.Now())
-	jsonBytes, err := json.MarshalIndent(c.logDto, "", "  ")
+	jsonBytes, err := json.Marshal(c.logDto)
 	if err != nil {
 		jsonBytes = []byte(fmt.Sprintf(`{"error": "%s"}`, err.Error()))
 	}

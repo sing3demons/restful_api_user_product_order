@@ -1,11 +1,13 @@
 services:
   mongo:
-      image: mongo:6
-      container_name: mongodb
-      # volumes:
-      #   - ./data/mongo:/data/db
-      ports:
-        - 27017:27017
+    image: mongo:6
+    container_name: mongodb
+    # volumes:
+    #   - ./data/mongo:/data/db
+    ports:
+      - 27017:27017
+    networks:
+      - ms-service
   postgres:
     image: postgres:16.0
     environment:
@@ -15,15 +17,18 @@ services:
     # volumes:
     #   - ./init.sql:/docker-entrypoint-initdb.d/init.sql
     ports:
-      - "5432:5432"
+      - '5432:5432'
+    networks:
+      - ms-service
   zookeeper:
     image: confluentinc/cp-zookeeper:latest
     environment:
       ZOOKEEPER_CLIENT_PORT: 2181
       ZOOKEEPER_TICK_TIME: 2000
     expose:
-      - "2181"
-    
+      - '2181'
+    networks:
+      - ms-service
   kafka:
     image: confluentinc/cp-kafka:latest
     depends_on:
@@ -38,27 +43,35 @@ services:
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
       KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
-
+    networks:
+      - ms-service
   kafka-ui:
     container_name: kafka-ui
     image: provectuslabs/kafka-ui:latest
     ports:
       - 8081:8080
     depends_on:
-      - "kafka"
+      - 'kafka'
     environment:
       KAFKA_CLUSTERS_0_NAME: kafka
       KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: kafka:9092
-      DYNAMIC_CONFIG_ENABLED: 'true'  # not necessary, added for tests
+      DYNAMIC_CONFIG_ENABLED: 'true' # not necessary, added for tests
       KAFKA_CLUSTERS_0_AUDIT_TOPICAUDITENABLED: 'true'
       KAFKA_CLUSTERS_0_AUDIT_CONSOLEAUDITENABLED: 'true'
+    networks:
+      - ms-service
   jaeger:
     image: jaegertracing/all-in-one:1.41
     container_name: jaeger
     ports:
-      - "16686:16686"   # Jaeger UI
-      - "14317:4317"    # OTLP gRPC
-      - "4318:4318"    # OTLP HTTP
+      - '16686:16686' # Jaeger UI
+      - '14317:4317' # OTLP gRPC
+      - '4318:4318' # OTLP HTTP
     environment:
       - COLLECTOR_OTLP_ENABLED=true
     restart: unless-stopped
+    networks:
+      - ms-service
+networks:
+  ms-service:
+    name: ms-service

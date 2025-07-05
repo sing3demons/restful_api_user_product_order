@@ -1,0 +1,71 @@
+filebeat.inputs:
+  - type: filestream
+    id: user-service-detail-logs
+    enabled: true
+    paths:
+      - /app/user-service/logs/detail/*.log
+    fields:
+      kafka_topic: logs.user_service.detail
+    json:
+      keys_under_root: true
+      add_error_key: true
+  - type: filestream
+    id: user-service-summary-logs
+    enabled: true
+    paths:
+      - /app/user-service/logs/summary/*.log
+    fields:
+      kafka_topic: logs.user_service.summary
+    json:
+      keys_under_root: true
+      add_error_key: true
+  - type: filestream
+    id: product-service-detail-logs
+    enabled: true
+    paths:
+      - /app/product-service/logs/detail/*.log
+    fields:
+      kafka_topic: logs.product_service.detail
+    json:
+      keys_under_root: true
+      add_error_key: true
+  - type: filestream
+    id: product-service-summary-logs
+    enabled: true
+    paths:
+      - /app/product-service/logs/summary/*.log
+    fields:
+      kafka_topic: logs.product_service.summary
+    json:
+      keys_under_root: true
+      add_error_key: true
+  - type: filestream
+    id: order-service-detail-logs
+    enabled: true
+    paths:
+      - /app/order-service/logs/detail/*.log
+    fields:
+      kafka_topic: logs.order_service.detail
+    json:
+      keys_under_root: true
+      add_error_key: true
+  - type: filestream
+    id: order-service-summary-logs
+    enabled: true
+    paths:
+      - /app/order-service/logs/summary/*.log
+    fields:
+      kafka_topic: logs.order_service.summary
+    json:
+      keys_under_root: true
+      add_error_key: true
+output.kafka:
+  hosts: ["kafka:9092"]
+  topic: "%{[fields.kafka_topic]}"   # 👈 fix field reference
+  codec.format:
+    string: '%{[message]}'
+  partition.round_robin:
+    reachable_only: true
+  required_acks: 1
+  compression: gzip
+  max_message_bytes: 1000000

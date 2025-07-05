@@ -47,7 +47,7 @@ func (s *summaryLogService) Update(key string, value any) {
 }
 func (s *summaryLogService) Flush(data Stack) {
 	s.Init(s.logDto)
-	s.logDto.LogType = "Summary"
+	s.logDto.LogType = "summary"
 	s.logDto.ResponseTime = time.Since(s.customLogger.utilService.begin).Microseconds()
 
 	if s.customLogger.logDto.AppResultHttpStatus != "" {
