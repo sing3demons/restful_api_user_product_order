@@ -1,7 +1,8 @@
 package user
 
-import "github.com/sing3demons/go-user-service/pkg/kp"
+import "github.com/sing3demons/go-common-kp/kp/pkg/kp"
 
+ 
 type Service interface {
 	CreateUser(ctx *kp.Context, user *UserModel) error
 	GetUserByID(ctx *kp.Context, id string) (*UserModel, error)

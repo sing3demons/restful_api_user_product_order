@@ -3,8 +3,8 @@ package user
 import (
 	"net/http"
 
-	"github.com/sing3demons/go-user-service/pkg/kp"
-	"github.com/sing3demons/go-user-service/pkg/logger"
+	"github.com/sing3demons/go-common-kp/kp/pkg/kp"
+	"github.com/sing3demons/go-common-kp/kp/pkg/logger"
 )
 
 type Handler struct {

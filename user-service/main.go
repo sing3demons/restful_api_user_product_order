@@ -5,9 +5,10 @@ import (
 	"fmt"
 	"os"
 
-	config "github.com/sing3demons/go-user-service/configs"
-	"github.com/sing3demons/go-user-service/pkg/kp"
-	"github.com/sing3demons/go-user-service/pkg/logger"
+	config "github.com/sing3demons/go-common-kp/kp/configs"
+	"github.com/sing3demons/go-common-kp/kp/pkg/kp"
+	"github.com/sing3demons/go-common-kp/kp/pkg/logger"
+
 	"github.com/sing3demons/go-user-service/user"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
@@ -36,11 +37,13 @@ func ConnectMongo() *mongo.Database {
 
 func main() {
 	conf := config.NewConfig()
+
 	if os.Getenv("ENV") == "docker" {
 		conf.LoadEnv("configs/.docker.env")
 	} else {
 		conf.LoadEnv("configs")
 	}
+	fmt.Println("Loading configuration...", conf.App.Name)
 
 	logApp := logger.NewLogger(conf.Log.App)
 	defer logApp.Sync()

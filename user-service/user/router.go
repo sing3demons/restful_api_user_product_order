@@ -3,7 +3,7 @@ package user
 import (
 	"context"
 
-	"github.com/sing3demons/go-user-service/pkg/kp"
+	"github.com/sing3demons/go-common-kp/kp/pkg/kp"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
