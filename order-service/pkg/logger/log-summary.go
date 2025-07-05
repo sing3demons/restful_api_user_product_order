@@ -83,11 +83,19 @@ func (s *summaryLogService) Flush(data Stack) {
 	if len(s.customLogger.summaryLogAdditionalInfo) > 0 {
 		s.logDto.Sequences = append(s.logDto.Sequences, s.customLogger.summaryLogAdditionalInfo...)
 		sequences := s.logDto.Sequences
-		jsonBytes, err := json.Marshal(sequences)
+		events := []EventSummary{}
+		for i := range sequences {
+			events = append(events, EventSummary{
+				Event:  sequences[i].Node + " . " + sequences[i].Command,
+				Result: sequences[i].Result,
+			})
+		}
+		jsonBytes, err := json.Marshal(events)
 		if err == nil {
 			s.logDto.Message = string(jsonBytes)
 		}
 		s.logDto.Sequences = nil
+		sequences = nil
 		s.customLogger.summaryLogAdditionalInfo = nil
 	}
 

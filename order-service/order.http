@@ -4,11 +4,11 @@ POST {{uti}}/orders HTTP/1.1
 Content-Type: application/json
 
 {
-    "customer_id": "0197d828-cfa5-7ac9-85de-e9dc4d2c3541",
+    "customer_id": "0197d874-3325-7c6d-96c1-bf3953a4b5cf",
     "status": "pending",
     "items": [
         {
-            "id": "c8f809ad-0cf4-4825-937f-7e39ddf1e6cd",
+            "id": "7d57af1d-573d-48d1-affe-41fd79459c71",
             "name": "p1",
             "quantity": 1,
             "price": 20.0

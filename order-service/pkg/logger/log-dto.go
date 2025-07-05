@@ -26,14 +26,19 @@ type Metadata struct {
 }
 
 type SequenceResult struct {
-	Result  string `json:"ResultCode"`
-	Desc    string `json:"ResultDesc"`
-	ResTime int64  `json:"ResTime,omitempty"` // Response time in milliseconds
+	Result  string `json:"result_code"`
+	Desc    string `json:"result_desc"`
+	ResTime int64  `json:"res_time,omitempty"` // Response time in milliseconds
 }
 type Sequence struct {
-	Node    string           `json:"Node"`
-	Command string           `json:"Command"`
-	Result  []SequenceResult `json:"Result"`
+	Node    string           `json:"node"`
+	Command string           `json:"command"`
+	Result  []SequenceResult `json:"result"` // List of results for the sequence
+}
+
+type EventSummary struct {
+	Event  string           `json:"event"`
+	Result []SequenceResult `json:"result"` // List of results for the event
 }
 
 // LogDto struct
