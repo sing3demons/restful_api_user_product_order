@@ -3,6 +3,7 @@ package logger
 import (
 	"encoding/json"
 	"reflect"
+	"strings"
 	"time"
 )
 
@@ -50,10 +51,24 @@ func (s *summaryLogService) Flush(data Stack) {
 	s.logDto.LogType = "summary"
 	s.logDto.ResponseTime = time.Since(s.customLogger.utilService.begin).Microseconds()
 
-	if s.customLogger.logDto.AppResultHttpStatus != "" {
-		s.logDto.AppResultHttpStatus = s.customLogger.logDto.AppResultHttpStatus
+	if data.Code != "" {
+		s.logDto.AppResultCode = data.Code
 	} else {
-		s.logDto.AppResultHttpStatus = "200"
+		if s.customLogger.logDto.AppResultCode != "" {
+			s.logDto.AppResultCode = s.customLogger.logDto.AppResultCode
+		} else {
+			s.logDto.AppResultCode = "20000"
+		}
+	}
+
+	if data.Status != "" {
+		s.logDto.AppResultHttpStatus = data.Status
+	} else {
+		if s.customLogger.logDto.AppResultHttpStatus != "" {
+			s.logDto.AppResultHttpStatus = s.customLogger.logDto.AppResultHttpStatus
+		} else {
+			s.logDto.AppResultHttpStatus = "200"
+		}
 	}
 
 	if s.customLogger.logDto.AppResultType != "" {
@@ -68,16 +83,18 @@ func (s *summaryLogService) Flush(data Stack) {
 		s.logDto.Severity = NORMAL
 	}
 
-	if s.customLogger.logDto.AppResult != "" {
-		s.logDto.AppResult = s.customLogger.logDto.AppResult
+	if data.ResultType != "" {
+		if strings.ToLower(data.ResultType) == "ok" {
+			s.logDto.AppResult = "Success"
+		} else {
+			s.logDto.AppResult = data.ResultType
+		}
 	} else {
-		s.logDto.AppResult = "Success"
-	}
-
-	if s.customLogger.logDto.AppResultCode != "" {
-		s.logDto.AppResultCode = s.customLogger.logDto.AppResultCode
-	} else {
-		s.logDto.AppResultCode = "20000"
+		if s.customLogger.logDto.AppResult != "" {
+			s.logDto.AppResult = s.customLogger.logDto.AppResult
+		} else {
+			s.logDto.AppResult = "Success"
+		}
 	}
 
 	if len(s.customLogger.summaryLogAdditionalInfo) > 0 {
