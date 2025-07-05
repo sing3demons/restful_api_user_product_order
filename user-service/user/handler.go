@@ -62,6 +62,7 @@ func (h *Handler) CreateUser(ctx *kp.Context) error {
 		})
 	}
 
+	ctx.Header().Set("x-rid", ctx.RequestId())
 	return ctx.JSON(201, map[string]string{
 		"message": "create_success",
 		"user_id": body.ID,
@@ -79,6 +80,7 @@ func (h *Handler) GetUserByID(ctx *kp.Context) error {
 		ctx.Log().SetSummary(summary).Error(logger.NewInbound(cmd, ""), map[string]any{
 			"error": "invalid_user_id",
 		})
+		ctx.Header().Set("x-rid", ctx.RequestId())
 		return ctx.JSON(http.StatusBadRequest, map[string]string{
 			"error": "invalid_user_id",
 		})
@@ -97,7 +99,7 @@ func (h *Handler) GetUserByID(ctx *kp.Context) error {
 			"error": "data_not_found",
 		})
 	}
-
+	ctx.Header().Set("x-rid", ctx.RequestId())
 	return ctx.JSON(http.StatusOK, user)
 }
 
@@ -119,7 +121,7 @@ func (h *Handler) GetAllUsers(ctx *kp.Context) error {
 			"error": "internal_server_error",
 		})
 	}
-
+	ctx.Header().Set("x-rid", ctx.RequestId())
 	return ctx.JSON(http.StatusOK, users)
 }
 
@@ -158,6 +160,7 @@ func (h *Handler) DeleteUser(ctx *kp.Context) error {
 		})
 	}
 
+	ctx.Header().Set("x-rid", ctx.RequestId())
 	return ctx.JSON(http.StatusNoContent, map[string]string{
 		"message": "delete_success",
 	})
