@@ -10,6 +10,15 @@ Content-Type: application/json
     "email": "johndoe@example.com"
 }
 
+### Get User By Username
+GET {{uri}}/users/username/johndoe HTTP/1.1
+Content-Type: application/json
+
+### Get User By Email
+GET {{uri}}/users/email/johndoe2@example.com HTTP/1.1
+Content-Type: application/json
+
+
 ### Get User By ID
 GET {{uri}}/users/0197bbe2-768d-70c6-b968-f046ce6c605d HTTP/1.1
 Content-Type: application/json

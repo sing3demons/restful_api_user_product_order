@@ -8,6 +8,7 @@ type Service interface {
 	GetUserByID(ctx *kp.Context, id string) (*UserModel, error)
 	GetAllUsers(ctx *kp.Context) ([]*UserModel, error)
 	DeleteUser(ctx *kp.Context, id string) error
+	GetUser(ctx *kp.Context, key, value string) (*UserModel, error)
 }
 
 type userService struct {
@@ -33,4 +34,8 @@ func (s *userService) GetAllUsers(ctx *kp.Context) ([]*UserModel, error) {
 
 func (s *userService) DeleteUser(ctx *kp.Context, id string) error {
 	return s.repo.DeleteUser(ctx, id)
+}
+
+func (s *userService) GetUser(ctx *kp.Context, key, value string) (*UserModel, error) {
+	return s.repo.GetUser(ctx, key, value)
 }

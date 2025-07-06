@@ -2,6 +2,7 @@ package user
 
 import (
 	"net/http"
+	"regexp"
 
 	"github.com/sing3demons/go-common-kp/kp/pkg/kp"
 	"github.com/sing3demons/go-common-kp/kp/pkg/logger"
@@ -164,4 +165,73 @@ func (h *Handler) DeleteUser(ctx *kp.Context) error {
 	return ctx.JSON(http.StatusNoContent, map[string]string{
 		"message": "delete_success",
 	})
+}
+
+func (h *Handler) GetUser(ctx *kp.Context) error {
+	key := ctx.PathParam("key")
+	value := ctx.PathParam("value")
+	node := "client"
+	cmd := "get_user"
+	summary := logger.LogEventTag{
+		Node:        node,
+		Command:     cmd,
+		Code:        "200",
+		Description: "",
+	}
+
+	if key == "" || value == "" || (key != "email" && key != "username") {
+		summary.Code = "400"
+		summary.Description = "invalid_request"
+		ctx.Log().SetSummary(summary).Error(logger.NewInbound(cmd, ""), map[string]any{
+			"body": map[string]string{
+				"key":   key,
+				"value": value,
+			},
+		})
+		return ctx.JSON(http.StatusBadRequest, map[string]string{
+			"error": "invalid_request",
+		})
+	}
+
+	if key == "email" {
+		// validate email format
+		emailRegex := `^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$`
+		matched, err := regexp.MatchString(emailRegex, value)
+		if err != nil || !matched {
+			summary.Code = "400"
+			summary.Description = "invalid_email_format"
+			ctx.Log().SetSummary(summary).Error(logger.NewInbound(cmd, ""), map[string]any{
+				"body": map[string]string{
+					"key":   key,
+					"value": value,
+				},
+			})
+			return ctx.JSON(http.StatusBadRequest, map[string]string{
+				"error": "invalid_request",
+			})
+		}
+	}
+
+	ctx.Log().SetSummary(summary).Info(logger.NewInbound(cmd, ""), map[string]any{
+		"Query": map[string]string{
+			"key":   key,
+			"value": value,
+		},
+	})
+
+	user, err := h.svc.GetUser(ctx, key, value)
+	if err != nil {
+		if err.Error() == "data_not_found" {
+			return ctx.JSON(http.StatusNotFound, map[string]string{
+				"error": "data_not_found",
+			})
+		} else {
+			return ctx.JSON(http.StatusInternalServerError, map[string]string{
+				"error": "internal_server_error",
+			})
+		}
+	}
+
+	ctx.Header().Set("x-rid", ctx.RequestId())
+	return ctx.JSON(http.StatusOK, user)
 }

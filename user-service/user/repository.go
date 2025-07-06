@@ -19,6 +19,7 @@ import (
 
 type Repository interface {
 	GetUserByID(ctx *kp.Context, id string) (*UserModel, error)
+	GetUser(ctx *kp.Context, key, value string) (*UserModel, error)
 	GetAllUsers(ctx *kp.Context) ([]*UserModel, error)
 	CreateUser(ctx *kp.Context, user *UserModel) error
 	// UpdateUser(ctx *kp.Context, user *UserModel) error
@@ -407,4 +408,74 @@ func (r *userRepository) DeleteUser(ctx *kp.Context, id string) error {
 	})
 
 	return nil
+}
+
+// username or email
+func (r *userRepository) GetUser(ctx *kp.Context, key, value string) (*UserModel, error) {
+	desc := "find user by " + key
+	cmd := "get_user_by_" + key
+	node := "mongo"
+
+	start := time.Now()
+
+	filter := map[string]any{
+		"deleted_at": primitive.Null{},
+		key:          value,
+	}
+
+	processReqLog := ProcessMongoReq{
+		Collection: r.col.Name(),
+		Method:     "FindOne",
+		Query:      filter,
+		Document:   nil,
+		Options:    nil,
+	}
+
+	maskingType := logger.Lastname
+	if key == "email" {
+		maskingType = logger.Email
+	}
+	ctx.Log().Info(logger.NewDBRequest(logger.QUERY, desc), map[string]any{
+		"Body": processReqLog,
+		"Raw":  processReqLog.RawString(),
+	}, logger.MaskingOptionDto{
+		MaskingField: "Body.query." + key,
+		MaskingType:  maskingType,
+	})
+
+	var user UserModel
+	err := r.col.FindOne(context.Background(), filter).Decode(&user)
+	end := time.Since(start)
+
+	summary := logger.LogEventTag{
+		Node:        node,
+		Command:     cmd,
+		Code:        "200",
+		Description: "success",
+		ResTime:     end.Microseconds(),
+	}
+	if err != nil {
+		if err == mongo.ErrNoDocuments {
+			summary.Code = "404"
+			summary.Description = "data_not_found"
+			ctx.Log().SetSummary(summary).Error(logger.NewDBResponse(logger.QUERY, err.Error()), map[string]any{
+				"Error": err.Error(),
+				"Raw":   processReqLog.RawString(),
+			})
+			return nil, errors.New(summary.Description)
+		}
+		summary.Code = "500"
+		summary.Description = err.Error()
+		ctx.Log().SetSummary(summary).Error(logger.NewDBResponse(logger.QUERY, err.Error()), map[string]any{
+			"Error": err.Error(),
+			"Raw":   processReqLog.RawString(),
+		})
+		return nil, err
+	}
+
+	ctx.Log().SetSummary(summary).Info(logger.NewDBResponse(logger.QUERY, desc), map[string]any{
+		"Return": user,
+	})
+
+	return &user, nil
 }
