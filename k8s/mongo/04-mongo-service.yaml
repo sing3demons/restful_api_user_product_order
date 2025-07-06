@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: mongo
+  namespace: ms-service
+spec:
+  selector:
+    app: mongo
+  ports:
+    - protocol: TCP
+      port: 27017        # MongoDB port inside cluster
+      targetPort: 27017  # Container port
+      nodePort: 30199    # Node port to expose externally (30000-32767)
+  type: NodePort

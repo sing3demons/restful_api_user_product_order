@@ -34,11 +34,11 @@ func NewDB() (*sql.DB, error) {
 
 func main() {
 	conf := config.NewConfig()
-	if os.Getenv("ENV") == "docker" {
-		conf.LoadEnv("configs/.docker.env")
-	} else {
-		conf.LoadEnv("configs")
+	path := os.Getenv("CONFIG_PATH")
+	if path == "" {
+		path = "configs"
 	}
+	conf.LoadEnv(path)
 
 	logApp := logger.NewLogger(conf.Log.App)
 	defer logApp.Sync()

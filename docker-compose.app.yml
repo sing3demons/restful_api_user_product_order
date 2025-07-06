@@ -34,7 +34,8 @@ services:
     container_name: order-service
     restart: always
     environment:
-      - ENV=docker
+      # - CONFIG_PATH=configs/.docker.env
+      - KAFKA_BROKER=kafka:9092
       - MONGO_URI=mongodb://mongo:27017
       - USER_SERVICE_URL=http://user-service:8080
       - PRODUCT_SERVICE_URL=http://product-service:8082

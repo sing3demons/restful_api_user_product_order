@@ -1,0 +1,2 @@
+kubectl port-forward svc/mongo -n ms-service 27017:27017
+mongodb://mongoroototuser:password@localhost:27017/?authSource=admin

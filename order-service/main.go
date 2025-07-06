@@ -14,11 +14,9 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
-func ConnectMongo() *mongo.Database {
-	uri := os.Getenv("MONGO_URI")
-	if uri == "" {
-		uri = "mongodb://localhost:27017" // Replace with your MongoDB URI
-	}
+func ConnectMongo(conf *config.Config) *mongo.Database {
+	uri := conf.Get("MONGO_URI")
+
 	mongoClient, err := mongo.Connect(context.Background(), options.Client().ApplyURI(uri))
 	if err != nil {
 		panic(err)
@@ -35,12 +33,11 @@ func ConnectMongo() *mongo.Database {
 
 func main() {
 	conf := config.NewConfig()
-	if os.Getenv("ENV") == "docker" {
-		conf.LoadEnv("configs/.docker.env")
-	} else {
-		conf.LoadEnv("configs")
+	path := os.Getenv("CONFIG_PATH")
+	if path == "" {
+		path = "configs"
 	}
-
+	conf.LoadEnv(path)
 	logApp := logger.NewLogger(conf.Log.App)
 	defer logApp.Sync()
 
@@ -49,7 +46,7 @@ func main() {
 	logSummary := logger.NewLogger(conf.Log.Summary)
 	defer logSummary.Sync()
 
-	mongoDB := ConnectMongo()
+	mongoDB := ConnectMongo(conf)
 	app := kp.NewApplication(conf, logApp)
 	app.LogDetail(logDetail)
 	app.LogSummary(logSummary)
