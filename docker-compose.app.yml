@@ -6,7 +6,7 @@ services:
     container_name: product-service
     environment:
       - ENV=docker
-      - DB_HOST=postgres
+      - DB_HOST=postgres://root:password@postgres:5432/product_master?sslmode=disable
     volumes:
       - ./product-service/logs:/logs
     ports:

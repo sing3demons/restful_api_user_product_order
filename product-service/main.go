@@ -3,6 +3,7 @@ package main
 import (
 	"database/sql"
 	"fmt"
+	"log"
 	"os"
 
 	_ "github.com/lib/pq" // PostgreSQL driver
@@ -11,17 +12,12 @@ import (
 	"github.com/sing3demons/go-product-service/product"
 )
 
-func NewDB() (*sql.DB, error) {
-	host := os.Getenv("DB_HOST")
-	if host == "" {
-		host = "localhost"
-	}
-	databaseSource := fmt.Sprintf("host=%s port=%d user=%s "+
-		"password=%s dbname=%s sslmode=disable", host, 5432, "root", "password", "product_master")
+func NewDB(conf *config.Config) (*sql.DB, error) {
+	databaseSource := conf.Get("DB_HOST")
 
-	fmt.Println("Connecting to database with source:", databaseSource)
 	db, err := sql.Open("postgres", databaseSource)
 	if err != nil {
+		log.Printf("Error opening database: %v", err)
 		return nil, err
 	}
 	err = db.Ping()
@@ -39,7 +35,7 @@ func main() {
 	}
 	conf.LoadEnv(path)
 
-	db, err := NewDB()
+	db, err := NewDB(conf)
 	if err != nil {
 		panic(fmt.Sprintf("Failed to connect to database: %v", err))
 	}
@@ -49,7 +45,12 @@ func main() {
 	// app.StartKafka()
 
 	app.Get("/healthz", func(ctx *kp.Context) error {
-		return ctx.JSON(200, "OK")
+		if err := db.Ping(); err != nil {
+			log.Printf("Database connection error: %v", err)
+			return ctx.JSON(500, "Down")
+		}
+		ctx.Debug("Database connection is healthy")
+		return ctx.JSON(200, "UP")
 	})
 
 	// Register product routes

@@ -44,6 +44,8 @@ github.com/sing3demons/go-common-kp v1.0.0 h1:YAQ/PjJaVPtBZjJKekHy9yUo0CGI1IR1Ln
 github.com/sing3demons/go-common-kp v1.0.0/go.mod h1:pmw1CNk+px+QnspfKQt17YCulJhTdEYuNediNPtGR6c=
 github.com/sing3demons/go-common-kp v1.0.2 h1:G5MIt/jMQAdvu9Fxr8vp4xQovV2dTZoo/fUVP8STqd8=
 github.com/sing3demons/go-common-kp v1.0.2/go.mod h1:pmw1CNk+px+QnspfKQt17YCulJhTdEYuNediNPtGR6c=
+github.com/sing3demons/go-common-kp v1.0.3 h1:XglE7Kklx5Y1dX7i7o4K9guY/fkbvTXMFc3fTd1sePk=
+github.com/sing3demons/go-common-kp v1.0.3/go.mod h1:pmw1CNk+px+QnspfKQt17YCulJhTdEYuNediNPtGR6c=
 github.com/stretchr/objx v0.1.0/go.mod h1:HFkY916IF+rwdDfMAkV7OtwuqBVzrE8GR6GFx+wExME=
 github.com/stretchr/objx v0.4.0/go.mod h1:YvHI0jy2hoMjB+UWwv71VJQ9isScKT/TqJzVSSt89Yw=
 github.com/stretchr/testify v1.7.1/go.mod h1:6Fq8oRcR53rry900zMqJjRRixrwX3KX962/h/Wwjteg=

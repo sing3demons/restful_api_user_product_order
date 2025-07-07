@@ -4,7 +4,7 @@ go 1.24.0
 
 require (
 	github.com/lib/pq v1.10.9
-	github.com/sing3demons/go-common-kp v1.0.2
+	github.com/sing3demons/go-common-kp v1.0.3
 )
 
 require (
