@@ -4,10 +4,8 @@ go 1.24.0
 
 require (
 	github.com/google/uuid v1.6.0
-	github.com/joho/godotenv v1.5.1
-	github.com/sing3demons/go-common-kp v1.0.0
+	github.com/sing3demons/go-common-kp v1.0.1
 	go.mongodb.org/mongo-driver v1.17.4
-	gopkg.in/yaml.v2 v2.4.0
 )
 
 require (
@@ -19,6 +17,7 @@ require (
 	github.com/gorilla/mux v1.8.1 // indirect
 	github.com/gorilla/websocket v1.5.3 // indirect
 	github.com/grpc-ecosystem/grpc-gateway/v2 v2.27.1 // indirect
+	github.com/joho/godotenv v1.5.1 // indirect
 	github.com/klauspost/compress v1.16.7 // indirect
 	github.com/montanaflynn/stats v0.7.1 // indirect
 	github.com/pierrec/lz4/v4 v4.1.15 // indirect
@@ -48,4 +47,5 @@ require (
 	google.golang.org/grpc v1.73.0 // indirect
 	google.golang.org/protobuf v1.36.6 // indirect
 	gopkg.in/natefinch/lumberjack.v2 v2.2.1 // indirect
+	gopkg.in/yaml.v2 v2.4.0 // indirect
 )

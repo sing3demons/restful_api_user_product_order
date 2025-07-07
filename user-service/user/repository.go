@@ -256,10 +256,13 @@ func (r *userRepository) GetUserByID(ctx *kp.Context, id string) (*UserModel, er
 		"Return": user,
 	}, maskingOption...)
 
-	uri := "http://localhost:8080"
-	user.Href = fmt.Sprintf(uri+"/users/%s", user.ID)
+	user.Href = r.getHostURI(ctx, user.ID)
 
 	return &user, nil
+}
+
+func (r *userRepository) getHostURI(ctx *kp.Context, value string) string {
+	return fmt.Sprintf("%s/users/%s", ctx.HostName(), value)
 }
 
 func (r *userRepository) GetAllUsers(ctx *kp.Context) ([]*UserModel, error) {
@@ -324,7 +327,7 @@ func (r *userRepository) GetAllUsers(ctx *kp.Context) ([]*UserModel, error) {
 	}
 	defer cursor.Close(context.Background())
 
-	uri := "http://localhost:8080"
+	uri := ctx.HostName()
 	for cursor.Next(context.Background()) {
 		var user UserModel
 		if err := cursor.Decode(&user); err != nil {
@@ -472,6 +475,7 @@ func (r *userRepository) GetUser(ctx *kp.Context, key, value string) (*UserModel
 		})
 		return nil, err
 	}
+	user.Href = r.getHostURI(ctx, user.ID)
 
 	ctx.Log().SetSummary(summary).Info(logger.NewDBResponse(logger.QUERY, desc), map[string]any{
 		"Return": user,

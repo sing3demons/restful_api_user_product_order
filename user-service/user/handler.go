@@ -1,6 +1,7 @@
 package user
 
 import (
+	"errors"
 	"net/http"
 	"regexp"
 
@@ -166,7 +167,27 @@ func (h *Handler) DeleteUser(ctx *kp.Context) error {
 		"message": "delete_success",
 	})
 }
-
+func (h *Handler) validateUsernameAndEmail(key, value string) error {
+	if key == "" || value == "" || (key != "email" && key != "username") {
+		return errors.New("invalid_request")
+	}
+	if key == "email" {
+		// validate email format
+		emailRegex := `^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$`
+		matched, err := regexp.MatchString(emailRegex, value)
+		if err != nil || !matched {
+			return errors.New("invalid_email_format")
+		}
+	} else if key == "username" {
+		// validate username format (e.g., alphanumeric, length)
+		usernameRegex := `^[a-zA-Z0-9_]{3,20}$`
+		matched, err := regexp.MatchString(usernameRegex, value)
+		if err != nil || !matched {
+			return errors.New("invalid_username_format")
+		}
+	}
+	return nil
+}
 func (h *Handler) GetUser(ctx *kp.Context) error {
 	key := ctx.PathParam("key")
 	value := ctx.PathParam("value")
@@ -179,11 +200,12 @@ func (h *Handler) GetUser(ctx *kp.Context) error {
 		Description: "",
 	}
 
-	if key == "" || value == "" || (key != "email" && key != "username") {
+	if err := h.validateUsernameAndEmail(key, value); err != nil {
 		summary.Code = "400"
-		summary.Description = "invalid_request"
+		summary.Description = err.Error()
+
 		ctx.Log().SetSummary(summary).Error(logger.NewInbound(cmd, ""), map[string]any{
-			"body": map[string]string{
+			"Params": map[string]string{
 				"key":   key,
 				"value": value,
 			},
@@ -193,27 +215,8 @@ func (h *Handler) GetUser(ctx *kp.Context) error {
 		})
 	}
 
-	if key == "email" {
-		// validate email format
-		emailRegex := `^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$`
-		matched, err := regexp.MatchString(emailRegex, value)
-		if err != nil || !matched {
-			summary.Code = "400"
-			summary.Description = "invalid_email_format"
-			ctx.Log().SetSummary(summary).Error(logger.NewInbound(cmd, ""), map[string]any{
-				"body": map[string]string{
-					"key":   key,
-					"value": value,
-				},
-			})
-			return ctx.JSON(http.StatusBadRequest, map[string]string{
-				"error": "invalid_request",
-			})
-		}
-	}
-
 	ctx.Log().SetSummary(summary).Info(logger.NewInbound(cmd, ""), map[string]any{
-		"Query": map[string]string{
+		"Params": map[string]string{
 			"key":   key,
 			"value": value,
 		},
