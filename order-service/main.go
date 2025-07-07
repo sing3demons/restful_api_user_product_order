@@ -38,18 +38,9 @@ func main() {
 		path = "configs"
 	}
 	conf.LoadEnv(path)
-	logApp := logger.NewLogger(conf.Log.App)
-	defer logApp.Sync()
-
-	logDetail := logger.NewLogger(conf.Log.Detail)
-	defer logDetail.Sync()
-	logSummary := logger.NewLogger(conf.Log.Summary)
-	defer logSummary.Sync()
 
 	mongoDB := ConnectMongo(conf)
-	app := kp.NewApplication(conf, logApp)
-	app.LogDetail(logDetail)
-	app.LogSummary(logSummary)
+	app := kp.NewApplication(conf)
 	app.StartKafka()
 	app.CreateTopic("create_order_history")
 

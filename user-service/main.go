@@ -7,7 +7,6 @@ import (
 
 	config "github.com/sing3demons/go-common-kp/kp/configs"
 	"github.com/sing3demons/go-common-kp/kp/pkg/kp"
-	"github.com/sing3demons/go-common-kp/kp/pkg/logger"
 
 	"github.com/sing3demons/go-user-service/user"
 	"go.mongodb.org/mongo-driver/mongo"
@@ -41,18 +40,8 @@ func main() {
 	}
 	conf.LoadEnv(path)
 
-	logApp := logger.NewLogger(conf.Log.App)
-	defer logApp.Sync()
-
-	logDetail := logger.NewLogger(conf.Log.Detail)
-	defer logDetail.Sync()
-	logSummary := logger.NewLogger(conf.Log.Summary)
-	defer logSummary.Sync()
-
 	mongoDB := ConnectMongo(conf)
-	app := kp.NewApplication(conf, logApp)
-	app.LogDetail(logDetail)
-	app.LogSummary(logSummary)
+	app := kp.NewApplication(conf)
 	// app.StartKafka()
 
 	app.Get("/healthz", func(ctx *kp.Context) error {

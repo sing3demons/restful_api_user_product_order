@@ -4,7 +4,7 @@ go 1.24.0
 
 require (
 	github.com/google/uuid v1.6.0
-	github.com/sing3demons/go-common-kp v1.0.0
+	github.com/sing3demons/go-common-kp v1.0.2
 	go.mongodb.org/mongo-driver v1.17.4
 )
 
